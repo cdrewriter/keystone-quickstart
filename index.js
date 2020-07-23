@@ -41,7 +41,11 @@ const authStrategy = keystone.createAuthStrategy({
 module.exports = {
   keystone,
   apps: [
-    new GraphQLApp(),
+    new GraphQLApp({
+      apiPath: '/admin/api',
+      graphiqlPath: '/admin/graphiql',
+      apollo: { playground: true, introspection: true },
+    }),
     new StaticApp({
       path: staticRoute,
       src: staticPath,
