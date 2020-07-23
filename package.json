@@ -12,7 +12,7 @@
   },
   "scripts": {
     "dev": "cross-env NODE_ENV=development DISABLE_LOGGING=true keystone dev",
-    "build": "cross-env NODE_ENV=production keystone build",
+    "build": "keystone build --output dist",
     "lint": "eslint --fix client/**/*.js",
     "start": "cross-env NODE_ENV=production keystone start",
     "cypress:open": "cypress open"
