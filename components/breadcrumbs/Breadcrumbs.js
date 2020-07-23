@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { BreadcrumbJsonLd } from 'next-seo';
-import Config from '../../config';
+import Config from '../../configs';
 
 import { Breadcrumb } from 'react-bootstrap';
 

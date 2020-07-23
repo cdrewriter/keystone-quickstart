@@ -53,7 +53,7 @@ module.exports = {
       hooks: require.resolve('./admin/'),
     }),
     new NextApp({
-      dir: 'client',
+      dir: './',
     }),
   ],
   distDir,
