@@ -1,0 +1,10 @@
+@font-face {
+  font-family: 'SFBold';
+  src: url('/static/fonts/SFProDisplayBold.woff2') format('woff2'), /* Super Modern Browsers */
+       url('/static/fonts/SFProDisplayBold.woff') format('woff'), /* Pretty Modern Browsers */
+}
+@font-face {
+  font-family: 'SFReg';
+  src: url('/static/fonts/SFProDisplayRegular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('/static/fonts/SFProDisplayRegular.woff') format('woff'), /* Pretty Modern Browsers */
+}

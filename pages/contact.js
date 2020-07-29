@@ -30,7 +30,7 @@ const ContactPage = () => {
   const graphql = useContext(GraphQLContext);
   const [state, dispatch] = useReducer(alertsReducer, { variant: 'success', show: false });
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const payload = {
@@ -72,7 +72,7 @@ const ContactPage = () => {
           dispatch('error');
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.error(err);
         dispatch('error');
       });

@@ -5,33 +5,83 @@ const { AdminUIApp } = require('@keystonejs/app-admin-ui');
 const { NextApp } = require('@keystonejs/app-next');
 const { StaticApp } = require('@keystonejs/app-static');
 const { MongooseAdapter } = require('@keystonejs/adapter-mongoose');
-
+const expressSession = require('express-session');
+const MongoStore = require('connect-mongo')(expressSession);
 const { userIsAdmin } = require('./utils/access');
+const { getItem } = require('@keystonejs/server-side-graphql-client');
+const {
+
+  Text,
+
+  Relationship
+
+} = require('@keystonejs/fields');
 const { staticRoute, staticPath, distDir } = require('./config');
-const { User, Post, PostCategory, Contact } = require('./schema');
+const {
+  User,
+  Post,
+  PostCategory,
+  Contact,
+  ItemCategory,
+  ItemPrice,
+  ItemCar,
+  ItemCarCategory,
+  ItemService,
+  ItemServiceCategory,
+} = require('./schema');
 
 const PROJECT_NAME = 'KeystoneJS Quickstart';
 
 // Initialize
 const keystone = new Keystone({
   name: PROJECT_NAME,
-  adapter: new MongooseAdapter(),
-  onConnect: async () => {
-    // Initialize data
-    const users = await keystone.lists.User.adapter.findAll();
-    if (!users.length) {
-      // When not have any users
-      const initialData = require('./initial-data');
-      await keystone.createItems(initialData);
-    }
+
+  adapter: new MongooseAdapter({
+    mongoUri: 'mongodb://194.87.238.134/keystone-js-quickstart',
+  }),
+  cookieSecret: '6ArmOCyoLiCWMIlhOkG+6eQ+mWyFM4yF',
+  sessionStore: new MongoStore({
+    url: 'mongodb://194.87.238.134/keystone-js-quickstart',
+  }),
+  defaultAccess: {
+    list: true,
+    field: true,
+    custom: true,
   },
 });
-
 // Load schemas
 keystone.createList('User', User);
 keystone.createList('PostCategory', PostCategory);
 keystone.createList('Post', Post);
 keystone.createList('Contact', Contact);
+keystone.createList('ItemCategory', ItemCategory);
+keystone.createList('ItemPrice', ItemPrice);
+keystone.createList('ItemServiceCategory', ItemServiceCategory);
+keystone.createList('ItemService', ItemService);
+keystone.createList('ItemCar', ItemCar);
+keystone.createList('ItemCarCategory', ItemCarCategory);
+keystone.createList('Page', {
+  fields: {
+    name: { type: Text },
+    content: { type: Text },
+    copy: { type: Relationship, ref: 'Page' },
+  },
+  hooks: {
+    resolveInput: async ({ resolvedData }) => {
+      // Whenever copy field is set fetch the related data
+      const pageToCopy = resolvedData.copy
+        ? await getItem({
+            keystone,
+            listKey: 'Page',
+            itemId: resolvedData.copy,
+            returnFields: 'name, content',
+          })
+        : {};
+      // resolve data from the copied item and unset the relationship
+      return { ...resolvedData, ...pageToCopy, copy: undefined };
+    },
+  },
+});
 
 const authStrategy = keystone.createAuthStrategy({
   type: PasswordAuthStrategy,
@@ -53,8 +103,8 @@ module.exports = {
     new AdminUIApp({
       adminPath: '/admin',
       authStrategy,
+      enableDefaultRoute: false,
       isAccessAllowed: userIsAdmin,
-      hooks: require.resolve('./admin/'),
     }),
     new NextApp({
       dir: './',

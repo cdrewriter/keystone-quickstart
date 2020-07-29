@@ -4,3 +4,7 @@ export * from './User';
 export * from './Post';
 export * from './QueryMeta';
 export * from './PageInfo';
+export * from './Price';
+export * from './PriceCat';
+export * from './Cars';
+export * from './PriceCarCat';

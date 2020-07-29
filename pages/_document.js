@@ -1,21 +1,45 @@
 import React from 'react';
 import Document, { Head, Main, NextScript } from 'next/document';
+import { ServerStyleSheet } from 'styled-components';
+import { ServerStyleSheets } from '@material-ui/core/styles';
+
+import './styles.scss';
 
 export default class MyDocument extends Document {
+  static async getInitialProps(ctx) {
+    const styledComponentsSheet = new ServerStyleSheet();
+    const materialSheets = new ServerStyleSheets();
+    const originalRenderPage = ctx.renderPage;
+
+    try {
+      ctx.renderPage = () =>
+        originalRenderPage({
+          enhanceApp: (App) => (props) =>
+            styledComponentsSheet.collectStyles(materialSheets.collect(<App {...props} />)),
+        });
+      const initialProps = await Document.getInitialProps(ctx);
+      return {
+        ...initialProps,
+        styles: (
+          <React.Fragment>
+            {initialProps.styles}
+            {materialSheets.getStyleElement()}
+            {styledComponentsSheet.getStyleElement()}
+          </React.Fragment>
+        ),
+      };
+    } finally {
+      styledComponentsSheet.seal();
+    }
+  }
   render() {
     return (
-      <html>
+      <html lang="ru" dir="ltr">
         <Head>
           <meta charSet="utf-8" />
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
           <meta name="robots" content="max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
           <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-          <link
-            rel="stylesheet"
-            href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-            integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-            crossOrigin="anonymous"
-          />
           <link rel="icon" href="/favicon.png" />
         </Head>
         <body>
@@ -33,3 +57,4 @@ export default class MyDocument extends Document {
     );
   }
 }
+

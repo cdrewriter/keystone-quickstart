@@ -1,0 +1,172 @@
+//@import "~react-image-gallery/styles/scss/image-gallery.scss";
+@import url('https://use.fontawesome.com/releases/v5.12.0/css/all.css');
+main {
+  min-height: 90vh;
+}
+.logo {
+  background: #0D1E70;
+  color: #ffffff;
+  line-height: 0.9;
+  vertical-align: baseline;
+  display: flex;
+  min-height: inherit;
+  padding: 0 32px ;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 50;
+  padding: 2.5rem;
+  span {
+    font-weight: 700;
+  }
+  a {
+      color: #fff;
+  }
+}
+.breadcrumbs {
+  margin: 4rem 0 2rem;
+  .breadcrumb {
+    background-color: transparent;
+  }
+}
+
+.cardd {
+   h4 {
+     margin: 0.75rem 0;
+    line-height: 1.5rem;
+    color: #0D1E70;
+    font-family: 'SF Pro Display';
+    font-size: 1.5rem;
+  }
+  span {
+    color: #FF4E00;
+  }
+}
+.footer{
+   .MuiGrid-item {
+      padding: 1rem;
+   }
+}
+
+.navmenus {
+  display: flex;
+  width: 350px;
+  min-height: 48px;
+  .navwrap {
+    flex: 1 1 auto;
+    display: inline-flex;
+    position: relative;
+    white-space: nowrap;
+    flex-basis:auto;
+    flex-grow:1;
+    flex-shrink:1;
+  }
+}
+
+.navmenuitem {
+  position: relative;
+  display: flex;
+  height: 2rem;
+  font-size: 0.8rem;
+  align-items:center;
+
+  cursor:pointer;
+  display:flex;
+  flex-shrink:0;
+  font-stretch:100%;
+  font-weight:700;
+  height:48px;
+  font-size: 1rem;
+  justify-content:center;
+  letter-spacing: 0.075rem;
+text-transform: uppercase;
+  margin-left:1rem;
+  margin-right:1rem;
+  margin-top:0px;
+  min-height:3rem;
+  min-width:0px;
+  opacity:1;
+  padding-bottom:6px;
+  padding-left:12px;
+  padding-right:12px;
+  padding-top:6px;
+  position:relative;
+  text-align:center;
+  text-decoration-line:none;
+  text-decoration-style:solid;
+
+  color: #4B4B4B;
+
+}
+.navmenuitem.active {
+  color: #0D1E70;
+
+    text-decoration: none;
+
+}
+.navmenuitem:hover {
+  color: #0D1E70;
+
+    text-decoration: none;
+
+}
+.navmenuitem.active::before {
+  content: '';
+  bottom: 0;
+  background-color:#0D1E70;
+  border-top-left-radius:3px;
+  border-top-right-radius:3px;
+  bottom:0px;
+  box-sizing:border-box;
+  color:#FF4E00;
+  display:block;
+  font-family:Roboto, Helvetica, Arial, sans-serif;
+  font-size:14px;
+  font-weight:400;
+  height:3px;
+  left: 0;
+  right: 0;
+  position:absolute;
+  transition-delay:0s;
+  transition-duration:0.3s;
+  transition-property:all;
+  transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);
+  white-space:nowrap;
+  -webkit-font-smoothing:antialiased;
+}
+.navmenuitem:hover::before {
+  content: '';
+  bottom: 0;
+  background-color:#0D1E70;
+  border-top-left-radius:3px;
+  border-top-right-radius:3px;
+  bottom:0px;
+  box-sizing:border-box;
+  color:#FF4E00;
+  display:block;
+  font-family:Roboto, Helvetica, Arial, sans-serif;
+  font-size:14px;
+  font-weight:400;
+  height:3px;
+  left: 0;
+  right: 0;
+
+  position:absolute;
+  transition-delay:0s;
+  transition-duration:0.3s;
+  transition-property:all;
+  transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);
+  white-space:nowrap;
+  -webkit-font-smoothing:antialiased;
+}
+
+.cardd  * {
+  text-align: left;
+  font-size: 0.75rem;
+}
+.rec .rec-item-wrapper {
+  padding: 5rem 4px;
+}
+
+.sidebar_cont {
+  display: flex;
+}
