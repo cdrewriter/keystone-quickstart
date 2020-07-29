@@ -8,14 +8,6 @@ const { MongooseAdapter } = require('@keystonejs/adapter-mongoose');
 const expressSession = require('express-session');
 const MongoStore = require('connect-mongo')(expressSession);
 const { userIsAdmin } = require('./utils/access');
-const { getItem } = require('@keystonejs/server-side-graphql-client');
-const {
-
-  Text,
-
-  Relationship
-
-} = require('@keystonejs/fields');
 const { staticRoute, staticPath, distDir } = require('./config');
 const {
   User,
@@ -60,28 +52,6 @@ keystone.createList('ItemServiceCategory', ItemServiceCategory);
 keystone.createList('ItemService', ItemService);
 keystone.createList('ItemCar', ItemCar);
 keystone.createList('ItemCarCategory', ItemCarCategory);
-keystone.createList('Page', {
-  fields: {
-    name: { type: Text },
-    content: { type: Text },
-    copy: { type: Relationship, ref: 'Page' },
-  },
-  hooks: {
-    resolveInput: async ({ resolvedData }) => {
-      // Whenever copy field is set fetch the related data
-      const pageToCopy = resolvedData.copy
-        ? await getItem({
-            keystone,
-            listKey: 'Page',
-            itemId: resolvedData.copy,
-            returnFields: 'name, content',
-          })
-        : {};
-      // resolve data from the copied item and unset the relationship
-      return { ...resolvedData, ...pageToCopy, copy: undefined };
-    },
-  },
-});
 
 const authStrategy = keystone.createAuthStrategy({
   type: PasswordAuthStrategy,
