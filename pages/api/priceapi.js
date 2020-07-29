@@ -37,7 +37,7 @@ module.exports = async (req, res) => {
   const collection = await db.collection('itemprices')
 
   // Select the users collection from the database
-  const itemprices = await collection.find({}).toArray()
+  const itemprices = await collection.find({ }).toArray()
   //const itemprices = await collection.find({ categories: new ObjectId('5e949615b9b1831cc09b5b26')}).toArray()
 
   // Respond with a JSON string of all users in the collection
