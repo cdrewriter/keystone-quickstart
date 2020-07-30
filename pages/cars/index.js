@@ -9,7 +9,7 @@ import PriceCategories from '../../components/sidebars/PriceCategoriesMainT';
 import PriceItem from '../../components/price/PriceItem';
 import BlockHead from '../../templates/BlockHead';
 import { grey } from '@material-ui/core/colors';
-
+/*
 export async function getServerSideProps() {
   const res = await fetch(`${process.browser ? '' : 'https://keystone-quickstart.cdrewriter.vercel.app'}/api/carcatapi`)
   const data = await res.json()
@@ -17,7 +17,7 @@ export async function getServerSideProps() {
   // Pass data to the page via props
   return { props: { data } }
 }
-
+*/
 function SparePartsIcon(props) {
   return (
     <SvgIcon {...props}>
@@ -36,12 +36,55 @@ function SparePartsIcon(props) {
     </SvgIcon>
   );
 }
-export default function CarsList({ data }) {
+const CarsList = () => {
   const { query } = useRouter();
-  const { slug } = query;
-  console.log(data.itemcarcategories)
-    const { itemcarcategories } = data;
-      return (
+  const { page, limit, slug } = Utils.getPageInfoFromQuery(query);
+
+  let priceQueryObj = {};
+  if (slug) {
+    priceQueryObj = { priceCategories_every: { slug } };
+  }
+
+  const result = useGraphQL({
+    fetchOptionsOverride(options) {
+      options.url = `${process.browser ? '' : 'http://localhost:3000'}/admin/api`;
+    },
+    operation: {
+      query: /* GraphQL */ `
+        query CarCategoriesList {
+          allItemCarCategories {
+            name
+            slug
+            id
+            description
+          }
+        }
+      `,
+      variables: {
+        where: priceQueryObj,
+        first: limit,
+        skip: (page - 1) * limit,
+      },
+    },
+    loadOnMount: true,
+    loadOnReload: true,
+    loadOnReset: true,
+  });
+  const { cacheValue } = result;
+
+  if (cacheValue && cacheValue.data) {
+    const { allItemCarCategories } = cacheValue.data;
+    const priceItems = [];
+    if (allItemCarCategories && allItemCarCategories.length) {
+      for (let i = 0; i < allItemCarCategories.length; ++i) {
+        priceItems.push(
+          <>
+            <PriceItem key={i} post={allItemCarCategories[i]} />
+          </>
+        );
+      }
+    }
+    return (
         <>
         <Container maxWidth="md">
           <Breadcrumbs
@@ -63,11 +106,14 @@ export default function CarsList({ data }) {
             />
             <BlockHead heading="Техника в наличии" subheading="на стоянке в Миассе" justifyContent="center" />
           </Box>
-          <PriceCategories priceCategories={itemcarcategories} activeKey={slug} />
+          <PriceCategories priceCategories={allItemCarCategories} activeKey={slug} />
         </Container>
         </>
     );
-  };
+  }
+  return <>Loading...</>;
+};
 
 CarsList.propTypes = {};
 
+export default CarsList;

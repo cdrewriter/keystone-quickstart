@@ -10,7 +10,7 @@ import PriceCategories from '../../components/sidebars/PriceCategoriesMain';
 import BlockHead from '../../templates/BlockHead';
 import { grey } from '@material-ui/core/colors';
 
-
+/*
 
 export async function getServerSideProps() {
   const res = await fetch(`${process.browser ? '' : 'https://keystone-quickstart.cdrewriter.vercel.app'}/api/pricecatapi`)
@@ -18,7 +18,7 @@ export async function getServerSideProps() {
 
   // Pass data to the page via props
   return { props: { data } }
-}
+}*/
 
 function SparePartsIcon(props) {
   return (
@@ -38,10 +38,66 @@ function SparePartsIcon(props) {
     </SvgIcon>
   );
 }
-export default function SpareCategoryList({ data }) {
-    const { query } = useRouter();
-    const { slug } = query;
-    const { itemcategories } = data;
+const SpareCategoryList = () => {
+  const { query } = useRouter();
+  const { page, limit, slug } = Utils.getPageInfoFromQuery(query);
+
+  let priceQueryObj = {};
+  if (slug) {
+    priceQueryObj = { priceCategories_every: { slug } };
+  }
+
+  const result = useGraphQL({
+    fetchOptionsOverride(options) {
+      options.url = `${process.browser ? '' : 'http://localhost:3000'}/admin/api`;
+    },
+    operation: {
+      query: /* GraphQL */ `
+        query SpareCategoryList {
+          allItemCategories {
+            name
+            slug
+            id
+            description
+          }
+        }
+      `,
+      variables: {
+        where: priceQueryObj,
+        first: limit,
+        skip: (page - 1) * limit,
+      },
+    },
+    loadOnMount: true,
+    loadOnReload: true,
+    loadOnReset: true,
+  });
+  const { cacheValue } = result;
+
+  if (cacheValue && cacheValue.data) {
+    const { /*_allItemPricesMeta, allItemPrices,*/ allItemCategories } = cacheValue.data;
+    /* const priceItems = [];
+    if (allItemPrices && allItemPrices.length) {
+      for (let i = 0; i < allItemPrices.length; ++i) {
+        priceItems.push(
+          <>
+            <PriceItem key={i} post={allItemPrices[i]} />
+          </>
+        );
+      }
+    }
+  if (allItemCategories && allItemCategories.length) {
+      for (let i = 0; i < allItemCategories.length; ++i) {
+        priceItems.push(<PriceItem key={i} post={allItemCategories[i]} />);
+      }
+    }
+    const pageInfo = {
+      page,
+      limit,
+      totalPages: Math.ceil(_allItemPricesMeta.count / limit),
+      total: _allItemPricesMeta.count,
+    };
+*/
     return (
       <>
         <Container maxWidth="md">
@@ -73,10 +129,15 @@ export default function SpareCategoryList({ data }) {
               justifyContent="center"
             />
           </Box>
-          <PriceCategories priceCategories={itemcategories} activeKey={slug} />
+          <PriceCategories priceCategories={allItemCategories} activeKey={slug} />
         </Container>
       </>
     );
+  }
+
+  return <>Loading...</>;
 };
 
 SpareCategoryList.propTypes = {};
+
+export default SpareCategoryList;

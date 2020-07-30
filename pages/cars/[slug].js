@@ -44,7 +44,7 @@ function SparePartsIcon(props) {
   );
 }
 function Headdate({ data }) {
-  const newdata = data[0];
+  const newdata = datas[0];
   return (
     <>
       <Head>
@@ -54,53 +54,13 @@ function Headdate({ data }) {
     </>
   );
 }
-const BlogDetail = () => {
-  const { query } = useRouter();
-  const { slug } = query;
-  const classes = useStyles();
-  const result = useGraphQL({
-    fetchOptionsOverride(options) {
-      options.url = `${process.browser ? '' : 'http://localhost:3000'}/admin/api`;
-    },
-    operation: {
-      query: /* GraphQL */ `
-        query PostDetail($postWhere: ItemCarWhereInput) {
-          allItemCars(where: $postWhere) {
-            id
-            name
-            photos {
-              publicUrl
-            }
-            pricevalue
-            categories {
-              name
-              slug
-              id
-            }
-            chassis
-            isEnabled
-            description
-            netweight
-            engine
-          }
-          allItemCarCategories {
-            name
-            slug
-            id
-            description
-          }
-        }
-      `,
-      variables: {
-        postWhere: {
-          categories: { slug: slug },
-        },
-      },
-    },
-    loadOnMount: true,
-    loadOnReload: true,
-    loadOnReset: true,
-  });
+const BlogDetail = ({ newdata }) => {
+
+const { query } = useRouter();
+const { slug } = query;
+const classes = useStyles();
+
+  const result = newdata;
 
   const { cacheValue } = result;
   if (cacheValue && cacheValue.data) {
@@ -114,9 +74,10 @@ const BlogDetail = () => {
     }
     if (!allItemCars.length) {
       // When post is not found
-      return <PageLayout>Not fou1nd</PageLayout>;
+      return 'Not fou1nd';
     }
     return (
+      slug,
       <>
         <Container fixed>
           <Breadcrumbs
@@ -162,3 +123,56 @@ BlogDetail.propTypes = {
 };
 
 export default BlogDetail;
+
+
+export async function getServerSideProps(slug) {
+
+  const result = useGraphQL({
+    fetchOptionsOverride(options) {
+      options.url = `${process.browser ? 'http://194.87.238.134:3000/admin/api' : 'http://localhost:3000'}/admin/api`;
+    },
+    operation: {
+      query: /* GraphQL */ `
+        query PostDetail($postWhere: ItemCarWhereInput) {
+          allItemCars(where: $postWhere) {
+            id
+            name
+            photos {
+              publicUrl
+            }
+            pricevalue
+            categories {
+              name
+              slug
+              id
+            }
+            chassis
+            isEnabled
+            description
+            netweight
+            engine
+          }
+          allItemCarCategories {
+            name
+            slug
+            id
+            description
+          }
+        }
+      `,
+      variables: {
+        postWhere: {
+          categories: { slug: slug },
+        },
+      },
+    },
+    loadOnMount: true,
+    loadOnReload: true,
+    loadOnReset: true,
+  });
+  const res = await result
+  const newdata = await res.json()
+
+  // Pass data to the page via props
+  return { props: { newdata } }
+}

@@ -11,7 +11,7 @@ import BlockHead from '../../templates/BlockHead';
 import { grey } from '@material-ui/core/colors';
 import Header from '../../components/header';
 
-
+/*
 export async function getServerSideProps() {
   const res = await fetch(`${process.browser ? '' : 'https://keystone-quickstart.cdrewriter.vercel.app'}/api/priceapi`)
   const data = await res.json()
@@ -19,7 +19,7 @@ export async function getServerSideProps() {
   // Pass data to the page via props
   return { props: { data } }
 }
-
+*/
 function SparePartsIcon(props) {
   return (
     <SvgIcon {...props}>
@@ -50,12 +50,51 @@ function Headdate({ data }) {
   );
 }
 
-export default function SpareList({ data }) {
+const BlogDetail = () => {
   const { query } = useRouter();
   const { slug } = query;
-  const { itemprices } = data;
-  const post = itemprices[0];
-  console.log(post)
+
+  const result = useGraphQL({
+    fetchOptionsOverride(options) {
+      options.url = `${process.browser ? 'http://194.87.238.134:3000/admin/api' : 'http://localhost:3000'}/admin/api`;
+    },
+    operation: {
+      query: /* GraphQL */ `
+        query PostDetail($postWhere: ItemPriceWhereInput) {
+          allItemPrices(where: $postWhere) {
+            id
+            name
+            art
+            pricevalue
+            categories {
+              id
+              name
+              slug
+              description
+            }
+          }
+        }
+      `,
+      variables: {
+        postWhere: {
+          categories: { slug: slug },
+        },
+      },
+    },
+    loadOnMount: true,
+    loadOnReload: true,
+    loadOnReset: true,
+  });
+
+  const { cacheValue } = result;
+  if (cacheValue && cacheValue.data) {
+    const { allItemPrices } = cacheValue.data;
+    if (!allItemPrices.length) {
+      // When post is not found
+      return <PageLayout>Not fou1nd</PageLayout>;
+    }
+
+    const post = allItemPrices[0];
     return (
       <>
         <Container fixed>
@@ -97,15 +136,20 @@ export default function SpareList({ data }) {
             </Grid>
           <Grid item xs={9}>*/}
           <Paper elevation={0}>
-            <Tabll data={itemprices} />
+            <Tabll data={allItemPrices} />
           </Paper>
           {/*</Grid>
           </Grid>*/}
         </Container>
       </>
     );
+  }
+
+  return 'Loading...';
 };
 
-SpareList.propTypes = {
+BlogDetail.propTypes = {
   activeKey: PropTypes.string,
 };
+
+export default BlogDetail;

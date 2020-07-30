@@ -1,27 +1,17 @@
-/* eslint-disable react/prop-types */
 import React from 'react';
 import Formdata from '../components/Formdata';
 import { Paper, Box, Container, Typography } from '@material-ui/core';
 import Demo from '../components/Demo';
 import Carous from '../components/sections/carousel';
 
-export async function getServerSideProps() {
-  const res = await fetch(`${process.browser ? '' : 'https://keystone-quickstart.cdrewriter.vercel.app'}/api/carsapi`)
-  const data = await res.json()
-
-  // Pass data to the page via props
-  return { props: { data } }
-}
-
-
-export default function Home({ data }) {
+export default function Home() {
   return (
     <React.Fragment>
       <Box>
         <Demo />
       </Box>
       <Box>
-        <Carous props={data} key="carousel" />
+        {/*<Carous props={result.data} key="carousel" />*/}
       </Box>
       <Box my={12}>
         <Typography variant="h3" component="h3" align="center">
@@ -35,6 +25,7 @@ export default function Home({ data }) {
           </Paper>
         </Container>
       </Box>
+
     </React.Fragment>
   );
 }
