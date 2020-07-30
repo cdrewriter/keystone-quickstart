@@ -1,4 +1,5 @@
 const { Keystone } = require('@keystonejs/keystone');
+const { mysql } = require('mysql');
 const { PasswordAuthStrategy } = require('@keystonejs/auth-password');
 const { GraphQLApp } = require('@keystonejs/app-graphql');
 const { AdminUIApp } = require('@keystonejs/app-admin-ui');
@@ -28,18 +29,12 @@ const PROJECT_NAME = 'KeystoneJS Quickstart';
 // Initialize
 const keystone = new Keystone({
   name: PROJECT_NAME,
-  adapter: new KnexAdapter({
-    client: 'postgres',
-    connection: process.env.CONNECT_TO || process.env.DATABASE_URL || process.env.KNEX_URI
-  }
-  ),
-/*
   adapter: new MongooseAdapter({
     mongoUri: 'mongodb://194.87.238.134/keystone-js-quickstart',
   }),
   sessionStore: new MongoStore({
     url: 'mongodb://194.87.238.134/keystone-js-quickstart',
-  }),*/
+  }),
   cookieSecret: '6ArmOCyoLiCWMIlhOkG+6eQ+mWyFM4yF',
 
   defaultAccess: {
