@@ -5,6 +5,7 @@ const { AdminUIApp } = require('@keystonejs/app-admin-ui');
 const { NextApp } = require('@keystonejs/app-next');
 const { StaticApp } = require('@keystonejs/app-static');
 const { MongooseAdapter } = require('@keystonejs/adapter-mongoose');
+const { KnexAdapter } = require('@keystonejs/adapter-knex');
 const expressSession = require('express-session');
 const MongoStore = require('connect-mongo')(expressSession);
 const { userIsAdmin } = require('./utils/access');
@@ -27,14 +28,20 @@ const PROJECT_NAME = 'KeystoneJS Quickstart';
 // Initialize
 const keystone = new Keystone({
   name: PROJECT_NAME,
-
+  adapter: new KnexAdapter({
+    client: 'postgres',
+    connection: process.env.CONNECT_TO || process.env.DATABASE_URL || process.env.KNEX_URI
+  }
+  ),
+/*
   adapter: new MongooseAdapter({
     mongoUri: 'mongodb://194.87.238.134/keystone-js-quickstart',
   }),
-  cookieSecret: '6ArmOCyoLiCWMIlhOkG+6eQ+mWyFM4yF',
   sessionStore: new MongoStore({
     url: 'mongodb://194.87.238.134/keystone-js-quickstart',
-  }),
+  }),*/
+  cookieSecret: '6ArmOCyoLiCWMIlhOkG+6eQ+mWyFM4yF',
+
   defaultAccess: {
     list: true,
     field: true,
