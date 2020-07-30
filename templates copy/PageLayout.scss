@@ -1,0 +1,17 @@
+.page-layout {
+  display: flex;
+  flex-flow: column nowrap;
+  min-height: 100vh;
+
+  &-header {
+    flex: none;
+  }
+
+  &-main {
+    flex: 1;
+  }
+  &-footer {
+    flex: none;
+    background-color: var(--light);
+  }
+}
