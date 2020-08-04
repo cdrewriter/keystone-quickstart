@@ -56,7 +56,7 @@ const BlogDetail = () => {
 
   const result = useGraphQL({
     fetchOptionsOverride(options) {
-      options.url = `${process.browser ? 'http://194.87.238.134:3000/admin/api' : 'http://localhost:3000'}/admin/api`;
+      options.url = `${process.browser ? 'http://roma.ste96.ru:3000' : 'http://localhost:3000'}/admin/api`;
     },
     operation: {
       query: /* GraphQL */ `
@@ -112,12 +112,14 @@ const BlogDetail = () => {
               },
             ]}
           />
-          <Box m={8} style={{ display: 'flex', flexWrap: 'wrap' }}>
+          <Box m={1} style={{ display: 'flex', flexWrap: 'wrap' }}>
             <SparePartsIcon
               style={{
-                marginLeft: '2rem',
+                marginLeft: '50vw',
                 marginRight: '2rem',
-                transform: 'scale(2.5) translateY(0.5rem)',
+                opacity: 0.4,
+                zIndex: -1,
+                transform: 'scale(5) translateY(0rem)',
                 color: grey[300],
               }}
               viewBox="0 0 80 91.429"

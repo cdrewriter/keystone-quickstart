@@ -50,12 +50,12 @@ const useStyles = makeStyles(({ palette, breakpoints, spacing }) => ({
     },
   },
   background: {
-    position: 'absolute',
+    position: 'fixed',
     left: 0,
     right: 0,
     bottom: 0,
     top: 0,
-    height: '60vh',
+    height: '50vh',
     width: '100%',
   },
   arrow: {

@@ -7,7 +7,7 @@ import Carous from '../components/sections/carousel';
 export default function Home() {
   return (
     <React.Fragment>
-      <Box>
+      <Box className='fh'>
         <Demo />
       </Box>
       <Box>

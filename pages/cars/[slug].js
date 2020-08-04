@@ -54,13 +54,57 @@ function Headdate({ data }) {
     </>
   );
 }
-const BlogDetail = ({ newdata }) => {
+const BlogDetail = () => {
 
-const { query } = useRouter();
-const { slug } = query;
-const classes = useStyles();
+  const { query } = useRouter();
+  const { slug } = query;
 
-  const result = newdata;
+  const result = useGraphQL({
+    fetchOptionsOverride(options) {
+      options.url = `${process.browser ? 'http://roma.ste96.ru:3000' : 'http://localhost:3000'}/admin/api`;
+    },
+    operation: {
+      query: /* GraphQL */ `
+        query PostDetail($postWhere: ItemCarWhereInput) {
+          allItemCars(where: $postWhere) {
+            id
+            name
+            photos {
+              publicUrl
+            }
+            pricevalue
+            categories {
+              name
+              slug
+              id
+            }
+            chassis
+            isEnabled
+            description
+            netweight
+            engine
+          }
+          allItemCarCategories {
+            name
+            slug
+            id
+            description
+          }
+        }
+      `,
+      variables: {
+        postWhere: {
+          categories: { slug: slug },
+        },
+      },
+    },
+    loadOnMount: true,
+    loadOnReload: true,
+    loadOnReset: true,
+  });
+
+  const classes = useStyles();
+
 
   const { cacheValue } = result;
   if (cacheValue && cacheValue.data) {
@@ -123,56 +167,3 @@ BlogDetail.propTypes = {
 };
 
 export default BlogDetail;
-
-
-export async function getServerSideProps(slug) {
-
-  const result = useGraphQL({
-    fetchOptionsOverride(options) {
-      options.url = `${process.browser ? 'http://194.87.238.134:3000/admin/api' : 'http://localhost:3000'}/admin/api`;
-    },
-    operation: {
-      query: /* GraphQL */ `
-        query PostDetail($postWhere: ItemCarWhereInput) {
-          allItemCars(where: $postWhere) {
-            id
-            name
-            photos {
-              publicUrl
-            }
-            pricevalue
-            categories {
-              name
-              slug
-              id
-            }
-            chassis
-            isEnabled
-            description
-            netweight
-            engine
-          }
-          allItemCarCategories {
-            name
-            slug
-            id
-            description
-          }
-        }
-      `,
-      variables: {
-        postWhere: {
-          categories: { slug: slug },
-        },
-      },
-    },
-    loadOnMount: true,
-    loadOnReload: true,
-    loadOnReset: true,
-  });
-  const res = await result
-  const newdata = await res.json()
-
-  // Pass data to the page via props
-  return { props: { newdata } }
-}
