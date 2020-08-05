@@ -6,7 +6,6 @@ const { AdminUIApp } = require('@keystonejs/app-admin-ui');
 const { NextApp } = require('@keystonejs/app-next');
 const { StaticApp } = require('@keystonejs/app-static');
 const { MongooseAdapter } = require('@keystonejs/adapter-mongoose');
-const { KnexAdapter } = require('@keystonejs/adapter-knex');
 const expressSession = require('express-session');
 const MongoStore = require('connect-mongo')(expressSession);
 const { userIsAdmin } = require('./utils/access');

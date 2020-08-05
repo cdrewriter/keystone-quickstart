@@ -16,7 +16,8 @@
     "lint": "eslint --fix client/**/*.js",
     "start": "cross-env NODE_ENV=production keystone start",
     "cypress:open": "cypress open",
-    "create": "keystone create-tables"
+    "create": "keystone create-tables",
+    "startw": "node server.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
