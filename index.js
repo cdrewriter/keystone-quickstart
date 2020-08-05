@@ -83,4 +83,7 @@ module.exports = {
     }),
   ],
   distDir,
+  configureExpress: app => {
+    app.set('trust proxy', 1);
+  }
 };
