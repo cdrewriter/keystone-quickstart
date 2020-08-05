@@ -17,7 +17,7 @@
     "start": "cross-env NODE_ENV=production keystone start",
     "cypress:open": "cypress open",
     "create": "keystone create-tables",
-    "startw": "node server.js"
+    "server": "node server.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
