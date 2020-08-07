@@ -47,7 +47,7 @@ const CarsList = () => {
 
   const result = useGraphQL({
     fetchOptionsOverride(options) {
-      options.url = 'http://roma.ste96.ru:3000/admin/api';
+      options.url = 'https://ventservis74.ru/admin/api';
     },
     operation: {
       query: /* GraphQL */ `
